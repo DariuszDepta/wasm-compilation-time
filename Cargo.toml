@@ -1,0 +1,8 @@
+[package]
+name = "compilation-time"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+cosmwasm-vm = { path = "../../CosmWasm/cosmwasm/packages/vm" }
+walkdir = "2.5.0"
