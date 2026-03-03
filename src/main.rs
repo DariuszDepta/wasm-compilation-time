@@ -4,7 +4,7 @@ use std::path::Path;
 use std::time::Instant;
 use walkdir::WalkDir;
 
-const WASM_BINARIES_DIR: &str = "~/Temp/neutron_wasm_codes";
+const WASM_BINARIES_DIR: &str = "neutron_wasm_codes";
 
 const DEFAULT_MEMORY_LIMIT: Option<Size> = Some(Size::mebi(16));
 
@@ -17,6 +17,7 @@ fn main() {
             files.push(entry.path().to_path_buf());
         }
     }
+    files.sort();
 
     for file in files {
         // Load the binary to memory.
@@ -24,14 +25,16 @@ fn main() {
         let engine = make_compiling_engine(DEFAULT_MEMORY_LIMIT);
 
         let start = Instant::now();
-        _ = compile(&engine, &code).expect("failed to compile WASM code");
+        let is_ok = compile(&engine, &code).is_ok();
         let duration = start.elapsed();
 
-        println!(
-            "{:>12} {:>20} {:>20}",
-            file.file_name().unwrap().to_string_lossy(),
-            code.len(),
-            duration.as_nanos()
-        );
+        if is_ok {
+            println!(
+                "{:>12} {:>20} {:>20}",
+                file.file_name().unwrap().to_string_lossy(),
+                code.len(),
+                duration.as_nanos()
+            );
+        }
     }
 }
