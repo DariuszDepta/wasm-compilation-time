@@ -2,9 +2,9 @@
 
 R --vanilla <<EOF
 # Read the data (assuming space-separated)
-data <- read.table("singlepass.txt", header = FALSE)
+data <- read.table("cranelift.txt", header = FALSE)
 # Open PNG device
-png("size_vs_time.png", width=1600, height=1200)
+png("cranelift.png", width=1600, height=1200)
 # Plot scatter
 plot(data\$V2, data\$V3, xlab="Size (bytes)", ylab="Time (ns)", main="Size vs Time")
 # Fit a smooth curve using loess
