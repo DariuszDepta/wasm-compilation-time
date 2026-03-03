@@ -4,7 +4,7 @@ use std::path::Path;
 use std::time::Instant;
 use walkdir::WalkDir;
 
-const WASM_BINARIES_DIR: &str = "../neutron_wasm_codes";
+const WASM_BINARIES_DIR: &str = "~/Temp/neutron_wasm_codes";
 
 const DEFAULT_MEMORY_LIMIT: Option<Size> = Some(Size::mebi(16));
 
