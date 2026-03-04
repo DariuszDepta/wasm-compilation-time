@@ -5,4 +5,5 @@ edition = "2021"
 
 [dependencies]
 cosmwasm-vm = { path = "../../CosmWasm/cosmwasm/packages/vm" }
+wasmtime = { version = "42.0.1", features = ["winch"] }
 walkdir = "2.5.0"
