@@ -10,9 +10,9 @@ Wasmer Cranelift Speed:
   max:    302.382 [ms]
 
 Wasmer Singlepass:
-  avg:      7.495 [ms]
-  min:      0.700 [ms]
-  max:     36.245 [ms]
+  avg:      7.466 [ms]
+  min:      0.596 [ms]
+  max:     32.563 [ms]
 
 Wasmtime Cranelift None:
   avg:     39.324 [ms]
@@ -25,7 +25,7 @@ Wasmtime Cranelift Speed:
   max:    360.516 [ms]
 
 Wasmtime Singlepass:
-  avg:      6.318 [ms]
-  min:      0.505 [ms]
-  max:     32.756 [ms]
+  avg:      6.414 [ms]
+  min:      0.636 [ms]
+  max:     36.456 [ms]
 

@@ -19,14 +19,13 @@ fn write_file(file_name: &str, content: &str) {
 fn print_result(
     success: &mut dyn Write,
     failure: &mut dyn Write,
-    is_ok: bool,
     path: impl AsRef<Path>,
     size: usize,
     duration: &Duration,
     error: Option<String>,
 ) {
     let file = path.as_ref().file_name().unwrap().to_string_lossy();
-    if is_ok {
+    if error.is_none() {
         println!("{:>12} {:>20} {:>20}", file, size, duration.as_nanos());
         writeln!(
             success,
@@ -54,6 +53,33 @@ fn print_result(
     }
 }
 
+fn measure_time<T, F>(profile: &str, files: T, fun: F)
+where
+    T: Iterator<Item = PathBuf>,
+    F: Fn(&[u8]) -> Option<String>,
+{
+    let mut success = String::new();
+    let mut failure = String::new();
+    for file in files {
+        let code = get_code(&file);
+
+        let start = Instant::now();
+        let result = fun(&code);
+        let duration = start.elapsed();
+
+        print_result(
+            &mut success,
+            &mut failure,
+            file,
+            code.len(),
+            &duration,
+            result,
+        );
+    }
+    write_file(&format!("{}.txt", profile), &success);
+    write_file(&format!("{}-err.txt", profile), &failure);
+}
+
 fn use_wasmer<T>(profile: &str, files: T, singlepass: bool, speed: bool)
 where
     T: Iterator<Item = PathBuf>,
@@ -71,27 +97,11 @@ where
         wasmer::Store::new(compiler)
     };
 
-    let mut success = String::new();
-    let mut failure = String::new();
-    for file in files {
-        let code = get_code(&file);
-
-        let start = Instant::now();
-        let result = wasmer::Module::new(&store, &code);
-        let duration = start.elapsed();
-
-        print_result(
-            &mut success,
-            &mut failure,
-            result.is_ok(),
-            file,
-            code.len(),
-            &duration,
-            result.err().map(|e| e.to_string()),
-        );
-    }
-    write_file(&format!("{}.txt", profile), &success);
-    write_file(&format!("{}-err.txt", profile), &failure);
+    measure_time(profile, files, |code| {
+        wasmer::Module::new(&store, code)
+            .err()
+            .map(|e| e.to_string())
+    });
 }
 
 fn use_wasmtime<T>(profile: &str, files: T, singlepass: bool, speed: bool)
@@ -112,28 +122,9 @@ where
     config.parallel_compilation(true);
     let engine = wasmtime::Engine::new(&config).expect("failed to instantiate engine");
 
-    let mut success = String::new();
-    let mut failure = String::new();
-    for file in files {
-        // Load the binary to memory.
-        let code = get_code(&file);
-
-        let start = Instant::now();
-        let result = engine.precompile_module(&code);
-        let duration = start.elapsed();
-
-        print_result(
-            &mut success,
-            &mut failure,
-            result.is_ok(),
-            file,
-            code.len(),
-            &duration,
-            result.err().map(|e| e.to_string()),
-        );
-    }
-    write_file(&format!("{}.txt", profile), &success);
-    write_file(&format!("{}-err.txt", profile), &failure);
+    measure_time(profile, files, |code| {
+        engine.precompile_module(code).err().map(|e| e.to_string())
+    });
 }
 
 fn main() {
