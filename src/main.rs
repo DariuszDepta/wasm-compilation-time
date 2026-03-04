@@ -16,18 +16,18 @@ fn write_file(file_name: &str, content: &str) {
   std::fs::write(path, content).expect("failed to write result file");
 }
 
-fn print_result(success: &mut dyn Write, failure: &mut dyn Write, path: impl AsRef<Path>, size: usize, duration: &Duration, error: Option<String>) {
+fn print_result(success: &mut dyn Write, failure: &mut dyn Write, path: impl AsRef<Path>, max_key_len: usize, size: usize, duration: &Duration, error: Option<String>) {
   let file = path.as_ref().file_name().unwrap().to_string_lossy();
   if error.is_none() {
-    println!("{:>12} {:>20} {:>20}", file, size, duration.as_nanos());
-    writeln!(success, "{:>12} {:>20} {:>20}", file, size, duration.as_nanos()).unwrap();
+    println!("{:>max_key_len$} {:>20} {:>20}", file, size, duration.as_nanos());
+    writeln!(success, "{:>max_key_len$} {:>20} {:>20}", file, size, duration.as_nanos()).unwrap();
   } else {
-    eprintln!("{:>12} {:>20} {}", file, size, error.clone().unwrap_or("compilation error".to_string()));
-    writeln!(failure, "{:>12} {:>20} {}", file, size, error.unwrap_or("compilation error".to_string())).unwrap();
+    eprintln!("{:>max_key_len$} {:>20} {}", file, size, error.clone().unwrap_or("compilation error".to_string()));
+    writeln!(failure, "{:>max_key_len$} {:>20} {}", file, size, error.unwrap_or("compilation error".to_string())).unwrap();
   }
 }
 
-fn measure_time<T, F>(profile: &str, files: T, fun: F)
+fn measure_time<T, F>(profile: &str, max_key_len: usize, files: T, fun: F)
 where
   T: Iterator<Item = PathBuf>,
   F: Fn(&[u8]) -> Option<String>,
@@ -41,13 +41,13 @@ where
     let result = fun(&code);
     let duration = start.elapsed();
 
-    print_result(&mut success, &mut failure, file, code.len(), &duration, result);
+    print_result(&mut success, &mut failure, file, code.len(), max_key_len, &duration, result);
   }
   write_file(&format!("{}.txt", profile), &success);
   write_file(&format!("{}-err.txt", profile), &failure);
 }
 
-fn use_wasmer<T>(profile: &str, files: T, singlepass: bool, speed: bool)
+fn use_wasmer<T>(profile: &str, max_key_len: usize, files: T, singlepass: bool, speed: bool)
 where
   T: Iterator<Item = PathBuf>,
 {
@@ -64,10 +64,10 @@ where
     wasmer::Store::new(compiler)
   };
 
-  measure_time(profile, files, |code| wasmer::Module::new(&store, code).err().map(|e| e.to_string()));
+  measure_time(profile, max_key_len, files, |code| wasmer::Module::new(&store, code).err().map(|e| e.to_string()));
 }
 
-fn use_wasmtime<T>(profile: &str, files: T, singlepass: bool, speed: bool)
+fn use_wasmtime<T>(profile: &str, max_key_len: usize, files: T, singlepass: bool, speed: bool)
 where
   T: Iterator<Item = PathBuf>,
 {
@@ -85,16 +85,16 @@ where
   config.parallel_compilation(true);
   let engine = wasmtime::Engine::new(&config).expect("failed to instantiate engine");
 
-  measure_time(profile, files, |code| engine.precompile_module(code).err().map(|e| e.to_string()));
+  measure_time(profile, max_key_len, files, |code| engine.precompile_module(code).err().map(|e| e.to_string()));
 }
 
-fn use_cosmwasm<T>(profile: &str, files: T)
+fn use_cosmwasm<T>(profile: &str, max_key_len: usize, files: T)
 where
   T: Iterator<Item = PathBuf>,
 {
   const DEFAULT_MEMORY_LIMIT: Option<cosmwasm_vm::Size> = Some(cosmwasm_vm::Size::mebi(16));
 
-  measure_time(profile, files, |code| {
+  measure_time(profile, max_key_len, files, |code| {
     let engine = cosmwasm_vm::internals::make_compiling_engine(DEFAULT_MEMORY_LIMIT);
     cosmwasm_vm::internals::compile(&engine, code).err().map(|e| e.to_string())
   });
@@ -105,32 +105,36 @@ fn main() {
 
   let mut files = BTreeMap::new();
   let root_dir = Path::new(WASM_BINARIES_DIR).canonicalize().unwrap();
+  let mut max_key_len = 0;
   for entry in WalkDir::new(root_dir).max_depth(1) {
     let entry = entry.unwrap();
     if entry.file_type().is_file() {
       let path = entry.path().to_path_buf();
       let key = path.file_name().unwrap().to_string_lossy().to_string();
+      if key.len() > max_key_len {
+        max_key_len = key.len();
+      }
       files.insert(key, path);
     }
   }
 
   if args.len() == 1 {
     match args[0].as_str() {
-      p @ "wasmer-cranelift-none" => use_wasmer(p, files.values().cloned(), false, false),
-      p @ "wasmer-cranelift-speed" => use_wasmer(p, files.values().cloned(), false, true),
-      p @ "wasmer-singlepass" => use_wasmer(p, files.values().cloned(), true, false),
-      p @ "wasmtime-cranelift-none" => use_wasmtime(p, files.values().cloned(), false, false),
-      p @ "wasmtime-cranelift-speed" => use_wasmtime(p, files.values().cloned(), false, true),
-      p @ "wasmtime-singlepass" => use_wasmtime(p, files.values().cloned(), true, false),
-      p @ "cosmwasm-singlepass" => use_cosmwasm(p, files.values().cloned()),
+      p @ "wasmer-cranelift-none" => use_wasmer(p, max_key_len, files.values().cloned(), false, false),
+      p @ "wasmer-cranelift-speed" => use_wasmer(p, max_key_len, files.values().cloned(), false, true),
+      p @ "wasmer-singlepass" => use_wasmer(p, max_key_len, files.values().cloned(), true, false),
+      p @ "wasmtime-cranelift-none" => use_wasmtime(p, max_key_len, files.values().cloned(), false, false),
+      p @ "wasmtime-cranelift-speed" => use_wasmtime(p, max_key_len, files.values().cloned(), false, true),
+      p @ "wasmtime-singlepass" => use_wasmtime(p, max_key_len, files.values().cloned(), true, false),
+      p @ "cosmwasm-singlepass" => use_cosmwasm(p, max_key_len, files.values().cloned()),
       "all" => {
-        use_wasmer("wasmer-cranelift-none", files.values().cloned(), false, false);
-        use_wasmer("wasmer-cranelift-speed", files.values().cloned(), false, true);
-        use_wasmer("wasmer-singlepass", files.values().cloned(), true, false);
-        use_wasmtime("wasmtime-cranelift-none", files.values().cloned(), false, false);
-        use_wasmtime("wasmtime-cranelift-speed", files.values().cloned(), false, true);
-        use_wasmtime("wasmtime-singlepass", files.values().cloned(), true, false);
-        use_cosmwasm("cosmwasm-singlepass", files.values().cloned());
+        use_wasmer("wasmer-cranelift-none", max_key_len, files.values().cloned(), false, false);
+        use_wasmer("wasmer-cranelift-speed", max_key_len, files.values().cloned(), false, true);
+        use_wasmer("wasmer-singlepass", max_key_len, files.values().cloned(), true, false);
+        use_wasmtime("wasmtime-cranelift-none", max_key_len, files.values().cloned(), false, false);
+        use_wasmtime("wasmtime-cranelift-speed", max_key_len, files.values().cloned(), false, true);
+        use_wasmtime("wasmtime-singlepass", max_key_len, files.values().cloned(), true, false);
+        use_cosmwasm("cosmwasm-singlepass", max_key_len, files.values().cloned());
       }
       _ => eprintln!("error: invalid argument"),
     }
