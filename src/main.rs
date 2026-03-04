@@ -123,6 +123,15 @@ fn main() {
       p @ "wasmtime-cranelift-speed" => use_wasmtime(p, files.values().cloned(), false, true),
       p @ "wasmtime-singlepass" => use_wasmtime(p, files.values().cloned(), true, false),
       p @ "cosmwasm-singlepass" => use_cosmwasm(p, files.values().cloned()),
+      "all" => {
+        use_wasmer("wasmer-cranelift-none", files.values().cloned(), false, false);
+        use_wasmer("wasmer-cranelift-speed", files.values().cloned(), false, true);
+        use_wasmer("wasmer-singlepass", files.values().cloned(), true, false);
+        use_wasmtime("wasmtime-cranelift-none", files.values().cloned(), false, false);
+        use_wasmtime("wasmtime-cranelift-speed", files.values().cloned(), false, true);
+        use_wasmtime("wasmtime-singlepass", files.values().cloned(), true, false);
+        use_cosmwasm("cosmwasm-singlepass", files.values().cloned());
+      }
       _ => eprintln!("error: invalid argument"),
     }
   } else {
