@@ -24,6 +24,11 @@ tasks:
     cmds:
       - cmd: cargo +nightly fmt
 
+  install:
+    desc: Builds and installs release version from local sources
+    cmds:
+      - cmd: cargo +stable install wasm-compilation-time --path . --force
+
   run:
     desc: Runs all tests
     cmds:
