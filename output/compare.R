@@ -8,14 +8,15 @@ data7 <- read.table("cosmwasm-singlepass.txt", header=FALSE)
 
 svg("compare.svg", width = 10, height = 10)
 
-plot(data2$V2, data2$V3, xlab="Size (bytes)", ylab="Compilation Time (ns)", main="Compilation Time(size)", col="red", pch=1)
+plot(data2$V2, data2$V3, xlab="Size (bytes)", ylab="Compilation Time (ns)", main="Compilation Time(Size)", col="red", pch=1)
 
+points(data7$V2, data7$V3, col="orange", pch=6)
 points(data1$V2, data1$V3, col="black", pch=0)
 points(data3$V2, data3$V3, col="blue", pch=2)
 points(data4$V2, data4$V3, col="cyan", pch=3)
 points(data5$V2, data5$V3, col="magenta", pch=4)
 points(data6$V2, data6$V3, col="green", pch=5)
-points(data7$V2, data7$V3, col="yellow", pch=6)
+
 
 fit <- loess(V3 ~ V2, data = data1)
 lines(sort(data1$V2), predict(fit, newdata = data.frame(V2=sort(data1$V2))), col="black", lwd=2)
@@ -36,4 +37,20 @@ fit <- loess(V3 ~ V2, data = data6)
 lines(sort(data6$V2), predict(fit, newdata = data.frame(V2=sort(data6$V2))), col="green", lwd=2)
 
 fit <- loess(V3 ~ V2, data = data7)
-lines(sort(data7$V2), predict(fit, newdata = data.frame(V2=sort(data7$V2))), col="yellow", lwd=2)
+lines(sort(data7$V2), predict(fit, newdata = data.frame(V2=sort(data7$V2))), col="orange", lwd=2)
+
+legend("topleft",
+       legend = c(
+         "Wasmer Cranelift (no optimizations)",
+         "Wasmer Cranelift (optimized for speed)",
+         "Wasmer Singlepass (Wasmer 7.0.1)",
+         "Wasmtime Cranelift (no optimizations)",
+         "Wasmtime Cranelift (optimized for speed)",
+         "Wasmtime Singlepass",
+         "CosmWasm Singlepass (Wasmer 5.0.6)"
+       ),
+       col = c("black","red","blue","cyan","magenta","green","orange"),
+       pch = c(0,1,2,3,4,5,6),
+       lwd = 2,
+       cex = 0.8,
+       bg = "white")
