@@ -61,3 +61,30 @@ cat("  min:", sprintf("%10.3f", stats7$min), "[ms]\n")
 cat("  max:", sprintf("%10.3f", stats7$max), "[ms]\n")
 
 cat("\n")
+
+svg("stats.svg", width=10, height=10)
+par(mar=c(11,4,4,2))
+boxplot(
+  convert(data1$V3),
+  convert(data2$V3),
+  convert(data3$V3),
+  convert(data4$V3),
+  convert(data5$V3),
+  convert(data6$V3),
+  convert(data7$V3),
+  names = c(
+    "Wasmer Cranelift\n(no optimizations)",
+    "Wasmer Cranelift\n(optimized for speed)",
+    "Wasmer Singlepass\n(Wasmer 7.0.1)",
+    "Wasmtime Cranelift\n(no optimizations)",
+    "Wasmtime Cranelift\n(optimized for speed)",
+    "Wasmtime Singlepass",
+    "CosmWasm Singlepass\n(Wasmer 5.0.6)"
+  ),
+  pch = 1,
+  las = 2,
+  col = "orange",
+  medlwd = 2,
+  ylab = "Compilation Time (ms)",
+  main = "Compilation Time Distribution"
+)

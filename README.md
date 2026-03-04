@@ -11,3 +11,5 @@ Machine used for testing:
 
 
 ![comparison](./output/compare.svg)
+
+![stats](./output/stats.svg)
