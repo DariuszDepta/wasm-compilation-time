@@ -16,7 +16,7 @@ fn write_file(file_name: &str, content: &str) {
   std::fs::write(path, content).expect("failed to write result file");
 }
 
-fn print_result(success: &mut dyn Write, failure: &mut dyn Write, path: impl AsRef<Path>, max_key_len: usize, size: usize, duration: &Duration, error: Option<String>) {
+fn print_result(success: &mut dyn Write, failure: &mut dyn Write, max_key_len: usize, path: impl AsRef<Path>, size: usize, duration: &Duration, error: Option<String>) {
   let file = path.as_ref().file_name().unwrap().to_string_lossy();
   if error.is_none() {
     println!("{:>max_key_len$} {:>20} {:>20}", file, size, duration.as_nanos());
@@ -41,7 +41,7 @@ where
     let result = fun(&code);
     let duration = start.elapsed();
 
-    print_result(&mut success, &mut failure, file, code.len(), max_key_len, &duration, result);
+    print_result(&mut success, &mut failure, max_key_len, file, code.len(), &duration, result);
   }
   write_file(&format!("{}.txt", profile), &success);
   write_file(&format!("{}-err.txt", profile), &failure);
