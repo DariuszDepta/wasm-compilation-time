@@ -8,7 +8,7 @@ data7 <- read.table("cosmwasm-singlepass.txt", header=FALSE)
 
 svg("compare.svg", width = 10, height = 10)
 
-plot(data2$V2, data2$V3, xlab="Size (bytes)", ylab="Compilation Time (ns)", main="Compilation Time(Size)", col="red", pch=1)
+plot(data2$V2, data2$V3, xlab="WASM Size (bytes)", ylab="Compilation Time (ns)", main="Compilation Time", col="red", pch=1)
 
 points(data7$V2, data7$V3, col="orange", pch=6)
 points(data1$V2, data1$V3, col="black", pch=0)

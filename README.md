@@ -1,14 +1,19 @@
-# Measurement of WASM compile time
+# WASM compilation time
 
-Tested engines:
+### Tested WASM engines
 
 - Wasmer 7.0.1
 - Wasmtime 42.0.1
 
-Machine used for testing:
+### Testing platform
  
 - Apple M4 Pro, 64 GB
 
+### Test vectors
+
+- 5k+ WASM binaries of smart contracts taken from Neutron blockchain 
+
+### Results
 
 ![comparison](./output/compare.svg)
 
