@@ -46,7 +46,7 @@ legend("topleft",
          "Wasmer Singlepass (Wasmer 7.0.1)",
          "Wasmtime Cranelift (no optimizations)",
          "Wasmtime Cranelift (optimized for speed)",
-         "Wasmtime Singlepass",
+         "Wasmtime Singlepass (Winch 42.0.1)",
          "CosmWasm Singlepass (Wasmer 5.0.6)"
        ),
        col = c("black","red","blue","cyan","magenta","green","orange"),

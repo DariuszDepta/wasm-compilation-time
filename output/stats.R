@@ -25,42 +25,40 @@ stats5 <- compute_stats(data5)
 stats6 <- compute_stats(data6)
 stats7 <- compute_stats(data7)
 
-cat("\nWasmer Cranelift None:\n")
+cat("Wasmer Cranelift (no optimizations):\n")
 cat("  avg:", sprintf("%10.3f", stats1$avg), "[ms]\n")
 cat("  min:", sprintf("%10.3f", stats1$min), "[ms]\n")
 cat("  max:", sprintf("%10.3f", stats1$max), "[ms]\n")
 
-cat("\nWasmer Cranelift Speed:\n")
+cat("\nWasmer Cranelift (optimized for speed):\n")
 cat("  avg:", sprintf("%10.3f", stats2$avg), "[ms]\n")
 cat("  min:", sprintf("%10.3f", stats2$min), "[ms]\n")
 cat("  max:", sprintf("%10.3f", stats2$max), "[ms]\n")
 
-cat("\nWasmer Singlepass:\n")
+cat("\nWasmer Singlepass (Wasmer 7.0.1):\n")
 cat("  avg:", sprintf("%10.3f", stats3$avg), "[ms]\n")
 cat("  min:", sprintf("%10.3f", stats3$min), "[ms]\n")
 cat("  max:", sprintf("%10.3f", stats3$max), "[ms]\n")
 
-cat("\nWasmtime Cranelift None:\n")
+cat("\nWasmtime Cranelift (no optimizations):\n")
 cat("  avg:", sprintf("%10.3f", stats4$avg), "[ms]\n")
 cat("  min:", sprintf("%10.3f", stats4$min), "[ms]\n")
 cat("  max:", sprintf("%10.3f", stats4$max), "[ms]\n")
 
-cat("\nWasmtime Cranelift Speed:\n")
+cat("\nWasmtime Cranelift (optimized for speed):\n")
 cat("  avg:", sprintf("%10.3f", stats5$avg), "[ms]\n")
 cat("  min:", sprintf("%10.3f", stats5$min), "[ms]\n")
 cat("  max:", sprintf("%10.3f", stats5$max), "[ms]\n")
 
-cat("\nWasmtime Singlepass:\n")
+cat("\nWasmtime Singlepass (Winch 42.0.1):\n")
 cat("  avg:", sprintf("%10.3f", stats6$avg), "[ms]\n")
 cat("  min:", sprintf("%10.3f", stats6$min), "[ms]\n")
 cat("  max:", sprintf("%10.3f", stats6$max), "[ms]\n")
 
-cat("\nCosmwasm Singlepass:\n")
+cat("\nCosmwasm Singlepass (Wasmer 5.0.1):\n")
 cat("  avg:", sprintf("%10.3f", stats7$avg), "[ms]\n")
 cat("  min:", sprintf("%10.3f", stats7$min), "[ms]\n")
 cat("  max:", sprintf("%10.3f", stats7$max), "[ms]\n")
-
-cat("\n")
 
 svg("stats.svg", width=10, height=10)
 par(mar=c(11,4,4,2))
@@ -78,7 +76,7 @@ boxplot(
     "Wasmer Singlepass\n(Wasmer 7.0.1)",
     "Wasmtime Cranelift\n(no optimizations)",
     "Wasmtime Cranelift\n(optimized for speed)",
-    "Wasmtime Singlepass",
+    "Wasmtime Singlepass\n(Winch 42.0.1)",
     "CosmWasm Singlepass\n(Wasmer 5.0.6)"
   ),
   pch = 1,
