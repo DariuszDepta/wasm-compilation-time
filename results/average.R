@@ -3,7 +3,7 @@ data2 <- read.table("wasmer-cranelift-speed.txt", header = FALSE)
 data3 <- read.table("wasmer-singlepass.txt", header = FALSE)
 data4 <- read.table("wasmtime-cranelift-none.txt", header = FALSE)
 data5 <- read.table("wasmtime-cranelift-speed.txt", header = FALSE)
-data6 <- read.table("wasmtime-winch.txt", header = FALSE)
+data6 <- read.table("wasmtime-singlepass.txt", header = FALSE)
 
 convert <- function(x) x / 1e6
 
@@ -48,7 +48,7 @@ cat("  avg:", sprintf("%10.3f", stats5$avg), "[ms]\n")
 cat("  min:", sprintf("%10.3f", stats5$min), "[ms]\n")
 cat("  max:", sprintf("%10.3f", stats5$max), "[ms]\n")
 
-cat("\nWasmtime Winch:\n")
+cat("\nWasmtime Singlepass:\n")
 cat("  avg:", sprintf("%10.3f", stats6$avg), "[ms]\n")
 cat("  min:", sprintf("%10.3f", stats6$min), "[ms]\n")
 cat("  max:", sprintf("%10.3f", stats6$max), "[ms]\n")
