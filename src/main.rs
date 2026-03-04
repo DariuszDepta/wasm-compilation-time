@@ -4,16 +4,16 @@ use std::path::{Path, PathBuf};
 use std::time::{Duration, Instant};
 use walkdir::WalkDir;
 
-const WASM_BINARIES_DIR: &str = "neutron_wasm_codes";
-const RESULTS_DIR: &str = "results";
+const WASM_BINARIES_DIR: &str = "input";
+const RESULTS_DIR: &str = "output";
 
 fn get_code(path: impl AsRef<Path>) -> Vec<u8> {
-    std::fs::read(path).expect("failed to load WASM file")
+    std::fs::read(path).expect("failed to load WASM binary")
 }
 
 fn write_file(file_name: &str, content: &str) {
     let path = Path::new(RESULTS_DIR).join(file_name);
-    std::fs::write(path, content).expect("failed to write output file");
+    std::fs::write(path, content).expect("failed to write result file");
 }
 
 fn print_result(
