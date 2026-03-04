@@ -1,0 +1,37 @@
+version: '3'
+
+silent: true
+
+tasks:
+
+  build:
+    desc: Builds in debug mode
+    cmds:
+      - cmd: cargo +stable build
+
+  clean:
+    desc: Cleans all targets
+    cmds:
+      - cmd: cargo +stable clean
+
+  clippy:
+    desc: Runs clippy for all targets
+    cmds:
+      - cmd: cargo +stable clippy --all-targets
+
+  fmt:
+    desc: Runs code formatter
+    cmds:
+      - cmd: cargo +nightly fmt
+
+  run:
+    desc: Runs all tests
+    cmds:
+      - cmd: cargo +stable build --release
+      - cmd: ./target/release/wasm-compilation-time wasmer-cranelift-none
+      - cmd: ./target/release/wasm-compilation-time wasmer-cranelift-speed
+      - cmd: ./target/release/wasm-compilation-time wasmer-singlepass
+      - cmd: ./target/release/wasm-compilation-time wasmtime-cranelift-none
+      - cmd: ./target/release/wasm-compilation-time wasmtime-cranelift-speed
+      - cmd: ./target/release/wasm-compilation-time wasmtime-singlepass
+      - cmd: ./target/release/wasm-compilation-time cosmwasm-singlepass
