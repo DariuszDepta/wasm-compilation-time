@@ -476,16 +476,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "compilation-time"
-version = "0.1.0"
-dependencies = [
- "cosmwasm-vm",
- "walkdir",
- "wasmer 7.0.1",
- "wasmtime",
-]
-
-[[package]]
 name = "const-oid"
 version = "0.9.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3755,6 +3745,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "75a326b8c223ee17883a4251907455a2431acc2791c98c26279376490c378c16"
 dependencies = [
  "unicode-ident",
+]
+
+[[package]]
+name = "wasm-compilation-time"
+version = "1.0.0"
+dependencies = [
+ "cosmwasm-vm",
+ "walkdir",
+ "wasmer 7.0.1",
+ "wasmtime",
 ]
 
 [[package]]
