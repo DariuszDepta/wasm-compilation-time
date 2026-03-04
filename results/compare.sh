@@ -1,3 +1,3 @@
 #!/usr/bin/env zsh
 
-Rscript average.R
+Rscript compare.R
