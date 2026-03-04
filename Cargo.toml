@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+cosmwasm-vm = "3.0.4"
 wasmer = { version = "7.0.1", features = ["singlepass", "cranelift"] }
 wasmtime = { version = "42.0.1", features = ["winch"] }
 walkdir = "2.5.0"

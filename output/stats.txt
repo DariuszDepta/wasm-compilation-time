@@ -29,3 +29,8 @@ Wasmtime Singlepass:
   min:      0.694 [ms]
   max:     31.798 [ms]
 
+Cosmwasm Singlepass:
+  avg:     21.106 [ms]
+  min:      0.885 [ms]
+  max:    131.617 [ms]
+

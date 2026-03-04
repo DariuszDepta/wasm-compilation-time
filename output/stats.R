@@ -4,6 +4,7 @@ data3 <- read.table("wasmer-singlepass.txt", header = FALSE)
 data4 <- read.table("wasmtime-cranelift-none.txt", header = FALSE)
 data5 <- read.table("wasmtime-cranelift-speed.txt", header = FALSE)
 data6 <- read.table("wasmtime-singlepass.txt", header = FALSE)
+data7 <- read.table("cosmwasm-singlepass.txt", header = FALSE)
 
 convert <- function(x) x / 1e6
 
@@ -22,6 +23,7 @@ stats3 <- compute_stats(data3)
 stats4 <- compute_stats(data4)
 stats5 <- compute_stats(data5)
 stats6 <- compute_stats(data6)
+stats7 <- compute_stats(data7)
 
 cat("\nWasmer Cranelift None:\n")
 cat("  avg:", sprintf("%10.3f", stats1$avg), "[ms]\n")
@@ -52,5 +54,10 @@ cat("\nWasmtime Singlepass:\n")
 cat("  avg:", sprintf("%10.3f", stats6$avg), "[ms]\n")
 cat("  min:", sprintf("%10.3f", stats6$min), "[ms]\n")
 cat("  max:", sprintf("%10.3f", stats6$max), "[ms]\n")
+
+cat("\nCosmwasm Singlepass:\n")
+cat("  avg:", sprintf("%10.3f", stats7$avg), "[ms]\n")
+cat("  min:", sprintf("%10.3f", stats7$min), "[ms]\n")
+cat("  max:", sprintf("%10.3f", stats7$max), "[ms]\n")
 
 cat("\n")

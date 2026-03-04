@@ -127,6 +127,20 @@ where
     });
 }
 
+fn use_cosmwasm<T>(profile: &str, files: T)
+where
+    T: Iterator<Item = PathBuf>,
+{
+    const DEFAULT_MEMORY_LIMIT: Option<cosmwasm_vm::Size> = Some(cosmwasm_vm::Size::mebi(16));
+
+    measure_time(profile, files, |code| {
+        let engine = cosmwasm_vm::internals::make_compiling_engine(DEFAULT_MEMORY_LIMIT);
+        cosmwasm_vm::internals::compile(&engine, code)
+            .err()
+            .map(|e| e.to_string())
+    });
+}
+
 fn main() {
     let args = std::env::args().skip(1).collect::<Vec<String>>();
 
@@ -154,6 +168,7 @@ fn main() {
         p @ "wasmtime-cranelift-none" => use_wasmtime(p, files.values().cloned(), false, false),
         p @ "wasmtime-cranelift-speed" => use_wasmtime(p, files.values().cloned(), false, true),
         p @ "wasmtime-singlepass" => use_wasmtime(p, files.values().cloned(), true, false),
+        p @ "cosmwasm-singlepass" => use_cosmwasm(p, files.values().cloned()),
         _ => eprintln!("error: invalid argument"),
     }
 }

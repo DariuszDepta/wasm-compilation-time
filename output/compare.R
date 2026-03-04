@@ -3,15 +3,19 @@ data2 <- read.table("wasmer-cranelift-speed.txt", header=FALSE)
 data3 <- read.table("wasmer-singlepass.txt", header=FALSE)
 data4 <- read.table("wasmtime-cranelift-none.txt", header=FALSE)
 data5 <- read.table("wasmtime-cranelift-speed.txt", header=FALSE)
-data6 <- read.table("wasmtime-winch.txt", header=FALSE)
+data6 <- read.table("wasmtime-singlepass.txt", header=FALSE)
+data7 <- read.table("cosmwasm-singlepass.txt", header=FALSE)
 
-plot(data2$V2, data2$V3, xlab="Size (bytes)", ylab="Time (ns)", main="Compilation time(size)", col="red", pch=1)
+svg("compare.svg", width = 10, height = 10)
+
+plot(data2$V2, data2$V3, xlab="Size (bytes)", ylab="Compilation Time (ns)", main="Compilation Time(size)", col="red", pch=1)
 
 points(data1$V2, data1$V3, col="black", pch=0)
 points(data3$V2, data3$V3, col="blue", pch=2)
 points(data4$V2, data4$V3, col="cyan", pch=3)
 points(data5$V2, data5$V3, col="magenta", pch=4)
 points(data6$V2, data6$V3, col="green", pch=5)
+points(data7$V2, data7$V3, col="yellow", pch=6)
 
 fit <- loess(V3 ~ V2, data = data1)
 lines(sort(data1$V2), predict(fit, newdata = data.frame(V2=sort(data1$V2))), col="black", lwd=2)
@@ -30,3 +34,6 @@ lines(sort(data5$V2), predict(fit, newdata = data.frame(V2=sort(data5$V2))), col
 
 fit <- loess(V3 ~ V2, data = data6)
 lines(sort(data6$V2), predict(fit, newdata = data.frame(V2=sort(data6$V2))), col="green", lwd=2)
+
+fit <- loess(V3 ~ V2, data = data7)
+lines(sort(data7$V2), predict(fit, newdata = data.frame(V2=sort(data7$V2))), col="yellow", lwd=2)
