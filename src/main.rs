@@ -109,7 +109,7 @@ fn main() {
     let entry = entry.unwrap();
     if entry.file_type().is_file() {
       let path = entry.path().to_path_buf();
-      let key = path.file_name().unwrap().to_string_lossy().trim_end_matches(".wasm").parse::<usize>().unwrap();
+      let key = path.file_name().unwrap().to_string_lossy().to_string();
       files.insert(key, path);
     }
   }
