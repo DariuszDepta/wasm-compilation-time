@@ -1,34 +1,34 @@
 Wasmer Cranelift (no optimizations):
-  avg:     40.596 [ms]
-  min:      1.855 [ms]
-  max:    264.255 [ms]
+  avg:     68.868 [ms]
+  min:      3.132 [ms]
+  max:    498.938 [ms]
 
 Wasmer Cranelift (optimized for speed):
-  avg:     47.950 [ms]
-  min:      2.210 [ms]
-  max:    334.020 [ms]
+  avg:     78.072 [ms]
+  min:      3.928 [ms]
+  max:    560.587 [ms]
 
 Wasmer Singlepass (Wasmer 7.0.1):
-  avg:      7.766 [ms]
-  min:      0.572 [ms]
-  max:     34.327 [ms]
+  avg:     14.467 [ms]
+  min:      1.411 [ms]
+  max:     76.925 [ms]
 
 Wasmtime Cranelift (no optimizations):
-  avg:     42.672 [ms]
-  min:      1.895 [ms]
-  max:    348.166 [ms]
+  avg:     69.217 [ms]
+  min:      3.413 [ms]
+  max:    425.234 [ms]
 
 Wasmtime Cranelift (optimized for speed):
-  avg:     46.122 [ms]
-  min:      2.064 [ms]
-  max:    397.614 [ms]
+  avg:     77.408 [ms]
+  min:      3.866 [ms]
+  max:    603.675 [ms]
 
 Wasmtime Singlepass (Winch 42.0.1):
-  avg:      6.512 [ms]
-  min:      0.694 [ms]
-  max:     31.798 [ms]
+  avg:     12.119 [ms]
+  min:      1.114 [ms]
+  max:     55.601 [ms]
 
 Cosmwasm Singlepass (Wasmer 5.0.1):
-  avg:     21.106 [ms]
-  min:      0.885 [ms]
-  max:    131.617 [ms]
+  avg:     35.201 [ms]
+  min:      1.626 [ms]
+  max:    260.171 [ms]

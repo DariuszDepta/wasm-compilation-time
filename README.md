@@ -7,7 +7,7 @@
 
 ### Testing platform
  
-- Apple M4 Pro, 64 GB
+- AMD Ryzen™ 7 5700G, 128 GB
 
 ### Test vectors
 
