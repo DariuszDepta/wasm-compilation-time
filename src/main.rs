@@ -16,14 +16,26 @@ pub fn write_file(file_name: &str, content: &str) {
   std::fs::write(path, content).expect("failed to write result file");
 }
 
-fn print_result(success: &mut dyn Write, failure: &mut dyn Write, max_key_len: usize, path: impl AsRef<Path>, size: usize, duration: &Duration, error: Option<String>) {
+#[allow(clippy::too_many_arguments)]
+fn print_result(
+  success: &mut dyn Write,
+  failure: &mut dyn Write,
+  max_key_len: usize,
+  path: impl AsRef<Path>,
+  size: usize,
+  duration: &Duration,
+  error: Option<String>,
+  profile: &str,
+) {
   let file = path.as_ref().file_name().unwrap().to_string_lossy();
   if error.is_none() {
-    println!("{:>max_key_len$} {:>20} {:>20}", file, size, duration.as_nanos());
-    writeln!(success, "{:>max_key_len$} {:>20} {:>20}", file, size, duration.as_nanos()).unwrap();
+    let nanos = duration.as_nanos();
+    println!("{:>max_key_len$} {:>20} {:>20} ({})", file, size, nanos, profile);
+    writeln!(success, "{:>max_key_len$} {:>20} {:>20}", file, size, nanos).unwrap();
   } else {
-    eprintln!("{:>max_key_len$} {:>20} {}", file, size, error.clone().unwrap_or("compilation error".to_string()));
-    writeln!(failure, "{:>max_key_len$} {:>20} {}", file, size, error.unwrap_or("compilation error".to_string())).unwrap();
+    let err_str = error.clone().unwrap_or("compilation error".to_string());
+    eprintln!("{:>max_key_len$} {:>20} ({}) {}", file, size, profile, err_str);
+    writeln!(failure, "{:>max_key_len$} {:>20} {}", file, size, err_str).unwrap();
   }
 }
 
@@ -41,7 +53,7 @@ where
     let result = fun(&code);
     let duration = start.elapsed();
 
-    print_result(&mut success, &mut failure, max_key_len, file, code.len(), &duration, result);
+    print_result(&mut success, &mut failure, max_key_len, file, code.len(), &duration, result, profile);
   }
   write_file(&format!("{}.txt", profile), &success);
   write_file(&format!("{}-err.txt", profile), &failure);
