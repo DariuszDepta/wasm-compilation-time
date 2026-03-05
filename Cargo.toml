@@ -1,11 +1,18 @@
 [package]
 name = "wasm-compilation-time"
-version = "1.1.1"
+version = "2.0.0"
 edition = "2024"
 publish = false
 
+[features]
+default = []
+
+cosmwasm = ["dep:cosmwasm-vm"]
+wasmer = ["dep:wasmer"]
+wasmtime = ["dep:wasmtime"]
+
 [dependencies]
-cosmwasm-vm = "3.0.4"
-wasmer = { version = "7.0.1", features = ["singlepass", "cranelift"] }
-wasmtime = { version = "42.0.1", features = ["winch"] }
+cosmwasm-vm = { version = "3.0.4", optional = true }
+wasmer = { version = "7.0.1", features = ["singlepass", "cranelift"], optional = true }
+wasmtime = { version = "42.0.1", features = ["winch"], optional = true }
 walkdir = "2.5.0"
