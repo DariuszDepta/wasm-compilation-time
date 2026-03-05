@@ -32,13 +32,13 @@ tasks:
   run:
     desc: Runs all tests
     cmds:
-      - cmd: cargo +stable build --release --features=wasmer
+      - cmd: cargo +1.93.1 build --release --features=wasmer
       - cmd: ./target/release/wasm-compilation-time wasmer-cranelift-none
       - cmd: ./target/release/wasm-compilation-time wasmer-cranelift-speed
       - cmd: ./target/release/wasm-compilation-time wasmer-singlepass
-      - cmd: cargo +stable build --release --features=wasmtime
+      - cmd: cargo +1.93.1 build --release --features=wasmtime
       - cmd: ./target/release/wasm-compilation-time wasmtime-cranelift-none
       - cmd: ./target/release/wasm-compilation-time wasmtime-cranelift-speed
       - cmd: ./target/release/wasm-compilation-time wasmtime-singlepass
-      - cmd: cargo +stable build --release --features=cosmwasm
+      - cmd: cargo +1.86.0 build --release --features=cosmwasm
       - cmd: ./target/release/wasm-compilation-time cosmwasm-singlepass
